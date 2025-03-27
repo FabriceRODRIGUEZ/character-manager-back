@@ -1,7 +1,8 @@
 import dotenv from "dotenv"
 import pg from "pg"
 
-import {users_creation, characters_creation} from "./creation_queries.js"
+import { users_creation } from "./creation_queries.js"
+import { characters_creation } from "./creation_queries.js"
 
 
 export default class DbConfigurator {
