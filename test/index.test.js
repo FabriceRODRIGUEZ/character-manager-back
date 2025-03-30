@@ -1,6 +1,16 @@
 // import { expect } from "chai"
 // import sinon from "sinon"
 
+
+describe("Tests :", () => {
+    //
+})
+
+// - - -
+
+// import { expect } from "chai"
+// import sinon from "sinon"
+
 // import fonctions from "../index.js"
 
 

@@ -15,15 +15,15 @@ export default class UserController {
             SELECT *
             FROM Users
             ORDER BY username`)
-        return res.status(200).json(users)
+        return res.status(200).json(users.rows)
     }
 
     async getUser(req, res) {
-        const user = await this.db.query(`
+        const result = await this.db.query(`
             SELECT *
             FROM Users
             WHERE username = '${req.params.username}'`)
-        return res.status(200).json(user)
+        return res.status(200).json(result.rows[0])
     }
 
     async addUser(req, res) {
@@ -40,6 +40,7 @@ export default class UserController {
     }
 
     async updateUser(req, res) {
+        const user = "User updated"
         if (req.body.username) {
             await this.db.query(`
                 UPDATE Users SET
@@ -64,14 +65,14 @@ export default class UserController {
                 visibility = '${req.body.visibility}'
                 WHERE username = '${req.params.username}'`)
         }
-        return res.status(200).send("User updated")
+        return res.status(200).json(user)
     }
 
     async deleteUser(req, res) {
         await this.db.query(`
             DELETE FROM Users
             WHERE username = '${req.params.username}'`)
-        return res.status(204).send("User deleted")
+        return res.status(204).send()
     }
 
 }
