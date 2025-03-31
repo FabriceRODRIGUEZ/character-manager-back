@@ -4,6 +4,7 @@ import cors from "cors"
 import bodyParser from "body-parser"
 
 import DbConfigurator from "./configurators/db_configurator.js"
+import AuthRouter from "./routers/auth_router.js"
 import UserRouter from "./routers/user_router.js"
 
 
@@ -19,9 +20,9 @@ export default class Server {
         app.use(cors())
         app.use(bodyParser.json())
 
-        // app.use(publicRouter)
-        // app.use(privateRouter)
+        const authRouter = new AuthRouter(db_configurator.db).router
         const userRouter = new UserRouter(db_configurator.db).router
+        app.use(authRouter)
         app.use(userRouter)
         app.use("*", (_, res) => {
             return res.status(404).send("Not found")

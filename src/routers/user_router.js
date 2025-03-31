@@ -19,14 +19,3 @@ export default class UserRouter {
     }
 
 }
-
-// - - -
-
-// export default userRouter = express.Router()
-// const controller = new UserController(db)
-
-// userRouter.get("/users", controller.getAllUsers)
-// userRouter.get("/users/:username", controller.getUser)
-// userRouter.post("/users", controller.addUser)
-// userRouter.patch("/users/:username", controller.updateUser)
-// userRouter.delete("/users/:username", controller.deleteUser)
