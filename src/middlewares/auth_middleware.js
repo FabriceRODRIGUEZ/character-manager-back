@@ -1,18 +1,23 @@
 import jwt from "jsonwebtoken"
 
 
-export default function authenticate(req, res, next) {
-    const token = req.headers.authorization.split(" ")[1]
-    if (!token) return res.status(401).json("Token not provided")
+export default class AuthMiddleware {
+
+    authenticate(req, res, next) {
+        const token = req.headers.authorization.split(" ")[1]
+        if (!token) {
+            return res.status(401).json("Token not provided")
+        }
+        
+        try {
+            jwt.verify(token, process.env.TOKEN_SECRET)
+        } catch (error) {
+            return res.status(401).json("Invalid token")
+        }
     
-    try {
-        jwt.verify(token, process.env.TOKEN_SECRET)
-    } catch (error) {
-        return res.status(401).json("Invalid token")
+        req.user = jwt.decode(token).username
+        
+        next()
     }
 
-    const decodedToken = JSON.parse(jwt.decode(token.split(".")))
-    req.user = decodedToken.username
-    
-    next()
 }

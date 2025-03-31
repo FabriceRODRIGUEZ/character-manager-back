@@ -11,20 +11,20 @@ export default class UserController {
     }
 
     async getAllUsers(_, res) {
-        const result = await this.db.query(`SELECT * FROM Users
-            ORDER BY username`)
+        const result = await this.db.query(`SELECT username, email, visibility
+            FROM Users ORDER BY username`)
         return res.status(200).json(result.rows)
     }
 
     async getUser(req, res) {
-        const result = await this.db.query(`SELECT * FROM Users
-            WHERE username = '${req.params.username}'`)
+        const result = await this.db.query(`SELECT username, email, visibility
+            FROM Users WHERE username = '${req.params.username}'`)
         return res.status(200).json(result.rows[0])
     }
 
     async getUser(username) {
-        const result = await this.db.query(`SELECT * FROM Users
-            WHERE username = '${username}'`)
+        const result = await this.db.query(`SELECT username, email, visibility
+            FROM Users WHERE username = '${username}'`)
         return result.rows[0]
     }
 
@@ -33,6 +33,7 @@ export default class UserController {
             req.body.password, req.body.visibility)
         await this.db.query(`INSERT INTO Users (username, email, password, visibility) VALUES
             ('${user.username}', '${user.email}', '${user.password}', '${user.visibility}')`)
+        user.password = null
         return res.status(201).json(user)
     }
 
@@ -67,6 +68,7 @@ export default class UserController {
                 WHERE username = '${req.params.username}'`)
             user.visibility = req.body.visibility
         }
+        user.password = null
         return res.status(200).json(user)
     }
 

@@ -12,11 +12,13 @@ export default class LoginValidator {
     async validateLogin(req, res, next) {
         const fields = req.body
 
-        if (!fields.userId || !fields.password) {
+        if (!fields.user_id || !fields.password) {
             return res.status(400).send("Missing field(s)")
         }
 
-        const user = this.db.query(`SELECT * FROM Users WHERE username = '${fields.userId}'`).rows[0]
+        const result = await this.db.query(`SELECT * FROM Users
+            WHERE username = '${fields.user_id}'`)
+        const user = result.rows[0]
         // Check user
 
         const isValidPassword = await bcrypt.compare(fields.password, user.password)

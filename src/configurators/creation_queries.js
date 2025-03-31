@@ -1,7 +1,7 @@
 export const users_creation = `CREATE TABLE Users (
     username VARCHAR(20),
     email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(20) NOT NULL,
+    password TEXT NOT NULL,
     visibility VARCHAR(7) NOT NULL DEFAULT 'private',
     
     CONSTRAINT pk_users PRIMARY KEY(username),

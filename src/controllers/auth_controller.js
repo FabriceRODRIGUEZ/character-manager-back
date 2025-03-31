@@ -17,20 +17,15 @@ export default class AuthController {
         const user = new User(req.body.username, req.body.email,
             req.body.password, req.body.visibility)
         user.password = bcrypt.hashSync(user.password, 10)
-        await new UserController(db).addUser(user)
+        await new UserController(this.db).addUser(user)
         const token = this.#generateToken({ username: user.username })
         return res.status(201).json(token)
     }
 
     async login(req, res) {
-        const user = await new UserController(db).getUser(req.body.user_id).rows[0]
+        const user = await new UserController(this.db).getUser(req.body.user_id)
         const token = this.#generateToken({ username: user.username })
         return res.status(200).json(token)
-    }
-
-    async logout(_, res) {
-        //
-        return res.status(200).send()
     }
 
     async getMe(req, res) {
