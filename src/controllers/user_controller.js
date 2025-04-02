@@ -16,7 +16,7 @@ export default class UserController {
         return res.status(200).json(result.rows)
     }
 
-    async getUser(req, res) {
+    async getUserReq(req, res) {
         const result = await this.db.query(`SELECT username, email, visibility
             FROM Users WHERE username = '${req.params.username}'`)
         return res.status(200).json(result.rows[0])
@@ -28,7 +28,7 @@ export default class UserController {
         return result.rows[0]
     }
 
-    async addUser(req, res) {
+    async addUserReq(req, res) {
         const user = new User(req.body.username, req.body.email,
             req.body.password, req.body.visibility)
         await this.db.query(`INSERT INTO Users (username, email, password, visibility) VALUES
@@ -42,7 +42,7 @@ export default class UserController {
             ('${user.username}', '${user.email}', '${user.password}', '${user.visibility}')`)
     }
 
-    async updateUser(req, res) {
+    async updateUserReq(req, res) {
         const user = this.getUser(req.params.username)
         if (req.body.username) {
             await this.db.query(`UPDATE Users SET
@@ -72,7 +72,7 @@ export default class UserController {
         return res.status(200).json(user)
     }
 
-    async deleteUser(req, res) {
+    async deleteUserReq(req, res) {
         await this.db.query(`DELETE FROM Users
             WHERE username = '${req.params.username}'`)
         return res.status(204).send()

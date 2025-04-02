@@ -14,10 +14,10 @@ export default class UserRouter {
         const authMiddleware = new AuthMiddleware()
         
         this.router.get("/users", authMiddleware.authenticate, controller.getAllUsers)
-        this.router.get("/users/:username", authMiddleware.authenticate, controller.getUser)
-        this.router.post("/users", authMiddleware.authenticate, controller.addUser)
-        this.router.patch("/users/:username", authMiddleware.authenticate, controller.updateUser)
-        this.router.delete("/users/:username", authMiddleware.authenticate, controller.deleteUser)
+        this.router.get("/users/:username", authMiddleware.authenticate, controller.getUserReq)
+        this.router.post("/users", authMiddleware.authenticate, controller.addUserReq)
+        this.router.patch("/users/:username", authMiddleware.authenticate, controller.updateUserReq)
+        this.router.delete("/users/:username", authMiddleware.authenticate, controller.deleteUserReq)
     }
 
 }
