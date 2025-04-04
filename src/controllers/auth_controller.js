@@ -18,7 +18,11 @@ export default class AuthController {
             req.body.password, req.body.visibility)
         user.password = bcrypt.hashSync(user.password, 10)
         await new UserController(this.db).addUser(user)
-        return res.status(201).send()
+        return res.status(201).json({
+            "username": user.username,
+            "email": user.email,
+            "visibility": user.visibility
+        })
     }
 
     async login(req, res) {

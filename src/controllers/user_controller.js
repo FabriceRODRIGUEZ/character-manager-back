@@ -1,6 +1,7 @@
+import bcrypt from "bcrypt"
 import autoBind from "auto-bind"
 
-import User from "../models/user_model.js"
+import User from "../models/user.js"
 
 
 export default class UserController {
@@ -57,10 +58,10 @@ export default class UserController {
             user.email = req.body.email
         }
         if (req.body.password) {
+            const passwordHash = bcrypt.hashSync(req.body.password, 10)
             await this.db.query(`UPDATE Users SET
-                password = '${req.body.password}'
+                password = '${passwordHash}'
                 WHERE username = '${req.params.username}'`)
-            user.password = req.body.password
         }
         if (req.body.visibility) {
             await this.db.query(`UPDATE Users SET
@@ -68,7 +69,6 @@ export default class UserController {
                 WHERE username = '${req.params.username}'`)
             user.visibility = req.body.visibility
         }
-        user.password = null
         return res.status(200).json(user)
     }
 

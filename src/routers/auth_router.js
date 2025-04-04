@@ -1,10 +1,9 @@
 import express from "express"
 import autoBind from "auto-bind"
 
-import AuthController from "../controllers/auth_controller.js"
-import SignupValidator from "../validators/signup_validator.js"
-import LoginValidator from "../validators//login_validator.js"
 import AuthMiddleware from "../middlewares/auth_middleware.js"
+import AuthValidator from "../validators/auth_validator.js"
+import AuthController from "../controllers/auth_controller.js"
 
 
 export default class AuthRouter {
@@ -12,14 +11,13 @@ export default class AuthRouter {
     constructor(db) {
         autoBind(this)
         this.router = express.Router()
+        const middleware = new AuthMiddleware()
+        const validator = new AuthValidator(db)
         const controller = new AuthController(db)
-        const signupValidator = new SignupValidator(db)
-        const loginValidator = new LoginValidator(db)
-        const authMiddleware = new AuthMiddleware()
         
-        this.router.post("/signup", signupValidator.validateSignup, controller.signup)
-        this.router.post("/login", loginValidator.validateLogin, controller.login)
-        this.router.get("/me", authMiddleware.authenticate, controller.getMe)
+        this.router.post("/signup", validator.validateSignup, controller.signup)
+        this.router.post("/login", validator.validateLogin, controller.login)
+        this.router.get("/me", middleware.authenticate, controller.getMe)
     }
 
 }
