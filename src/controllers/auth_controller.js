@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import autoBind from "auto-bind"
 
-import User from "../models/user_model.js"
+import User from "../models/user.js"
 import UserController from "../controllers/user_controller.js"
 
 

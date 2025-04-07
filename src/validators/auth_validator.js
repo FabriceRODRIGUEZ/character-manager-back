@@ -2,8 +2,6 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import autoBind from "auto-bind"
 
-import UserController from "../controllers/user_controller.js"
-
 
 export default class AuthValidator {
 
@@ -14,7 +12,6 @@ export default class AuthValidator {
 
     async validateSignup(req, res, next) {
         const fields = req.body
-        const controller = new UserController(db)
 
         // Checking fields presence
         if (!fields.username || !fields.email || !fields.password || !fields.visibility) {
@@ -22,7 +19,6 @@ export default class AuthValidator {
         }
 
         // Checking username availability
-        // const usernameInDb = await controller.getUser(fields.username)
         const usernameInDb = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE username = '${fields.username}'`)
         if (usernameInDb == 1) {
@@ -31,7 +27,7 @@ export default class AuthValidator {
 
         // Checking email validity
         const emailPattern = new RegExp("^[a-z0-9\.]+@[a-z\.]+\.[a-z]+$")
-        if (emailPattern.test(fields.email)) {
+        if (!emailPattern.test(fields.email)) {
             return res.status(400).send("Incorrect email structure")
         }
 

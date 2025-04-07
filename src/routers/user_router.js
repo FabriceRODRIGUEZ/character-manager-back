@@ -15,14 +15,11 @@ export default class UserRouter {
         const userValidator = new UserValidator(db)
         const controller = new UserController(db)
         
-        this.router.get("/users", authValidator.authenticate,
-            controller.getAllUsers)
+        this.router.get("/users", authValidator.authenticate, controller.getAllUsers)
 
-        this.router.get("/users/:username", authValidator.authenticate,
-            userValidator.validateGetUser, controller.getUserReq)
+        this.router.get("/users/:username", authValidator.authenticate, controller.getUserReq)
         
-        this.router.post("/users", authValidator.authenticate,
-            userValidator.validateAddUser, controller.addUserReq)
+        this.router.post("/users", authValidator.authenticate, controller.addUserReq)
         
         this.router.patch("/users/:username", authValidator.authenticate,
             userValidator.validateUpdateUser, controller.updateUserReq)
