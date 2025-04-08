@@ -39,12 +39,12 @@ export default class AuthValidator {
         }
 
         // Checking password length
-        if (user.password.length < 8) {
+        if (fields.password.length < 8) {
             return res.status(400).send("Password not long enough")
         }
 
         // Checking visibility value
-        if (["private", "public"].includes(user.visibility)) {
+        if (!["private", "public"].includes(fields.visibility)) {
             return res.status(400).send("Wrong visibility value")
         }
 
