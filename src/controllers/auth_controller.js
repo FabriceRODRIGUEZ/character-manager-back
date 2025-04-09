@@ -28,11 +28,11 @@ export default class AuthController {
     async login(req, res) {
         const user = await new UserController(this.db).getUser(req.body.user_id)
         const token = this.#generateToken({ username: user.username })
-        return res.status(200).json({ "token": token })
+        return res.status(200).send(token)
     }
 
     async getMe(req, res) {
-        return res.status(200).json(req.user)
+        return res.status(200).send(req.user)
     }
 
     #generateToken(payload) {

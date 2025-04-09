@@ -21,7 +21,7 @@ export default class AuthValidator {
         // Checking username availability
         const usernameInDb = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE username = '${fields.username}'`)
-        if (usernameInDb == 1) {
+        if (usernameInDb.rows[0].count == 1) {
             return res.status(400).send("Username already exists")
         }
 
@@ -34,7 +34,7 @@ export default class AuthValidator {
         // Checking email availability
         const emailInDb = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE email = '${fields.email}'`)
-        if (emailInDb == 1) {
+        if (emailInDb.rows[0].count == 1) {
             return res.status(400).send("Email already used")
         }
 
@@ -66,7 +66,7 @@ export default class AuthValidator {
 
         // Checking user presence in db
         if (result.rows.length == 0) {
-            return res.status(400).send("User does not exist")
+            return res.status(401).send("User does not exist")
         }
 
         const user = result.rows[0]
@@ -74,7 +74,7 @@ export default class AuthValidator {
         // Checking password validity
         const isValidPassword = await bcrypt.compare(fields.password, user.password)
         if (!isValidPassword) {
-            return res.status(401).send("User or password incorrect")
+            return res.status(401).send("Incorrect password")
         }
 
         next()
@@ -85,12 +85,12 @@ export default class AuthValidator {
 
         // Checking token presence
         if (!token) {
-            return res.status(401).json("Token not provided")
+            return res.status(401).send("Token not provided")
         }
         
         // Checking token validity
         try { jwt.verify(token, process.env.TOKEN_SECRET) }
-        catch (error) { return res.status(401).json("Invalid token") }
+        catch (error) { return res.status(401).send("Invalid token") }
     
         req.user = jwt.decode(token).username
         
