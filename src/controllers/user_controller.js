@@ -44,7 +44,7 @@ export default class UserController {
     }
 
     async updateUserReq(req, res) {
-        const user = this.getUser(req.params.username)
+        const user = await this.getUser(req.params.username)
         if (req.body.username) {
             await this.db.query(`UPDATE Users SET
                 username = '${req.body.username}'

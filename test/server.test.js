@@ -6,7 +6,7 @@ import Server from "../src/server.js"
 
 describe("API tests :", function() {
 
-    // this.timeout(5000)
+    this.timeout(5000)
     chai.use(chaiHttp)
     const expect = chai.expect
     const server = new Server()
@@ -139,16 +139,16 @@ describe("API tests :", function() {
                 })
         })
 
-        // it("Should connect valid user with email", (done) => {
-        //     chai.request(app).post("/login")
-        //         .send({ user_id: "test@gmail.com", password: "test1234" })
-        //         .end((err, res) => {
-        //             expect(err).to.be.null
-        //             expect(res.status).to.equal(200)
-        //             expect(res.text).to.exist
-        //             done()
-        //         })
-        // })
+        it("Should connect valid user with email", (done) => {
+            chai.request(app).post("/login")
+                .send({ user_id: "test@gmail.com", password: "test1234" })
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.text).to.exist
+                    done()
+                })
+        })
 
         it("Should not connect user with missing fields", (done) => {
             chai.request(app).post("/login")
@@ -222,107 +222,178 @@ describe("API tests :", function() {
 
     })
 
-    // describe("Route GET /users :", () => {
+    describe("Route GET /users :", () => {
 
-    //     it("Should return all users with valid token", (done) => {
-    //         chai.request(app).get("/users")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(200)
-    //                 expect(res.body).to.be.an("array")
-    //                 expect(res.body.length).to.equal(2)
-    //                 done()
-    //             })
-    //     })
+        it("Should return all users with valid token", (done) => {
+            chai.request(app).get("/users")
+                .set("authorization", `Bearer ${token}`)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.body).to.be.an("array")
+                    expect(res.body.length).to.equal(2)
+                    done()
+                })
+        })
 
-    // })
+        it("Should not return all users without token", (done) => {
+            chai.request(app).get("/users")
+                .set("authorization", `Bearer `)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(401)
+                    expect(res.text).to.equal("Token not provided")
+                    done()
+                })
+        })
 
-    // describe("Route PATCH /users/:username :", () => {
+        it("Should not return all users with invalid token", (done) => {
+            chai.request(app).get("/users")
+                .set("authorization", `Bearer abc`)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(401)
+                    expect(res.text).to.equal("Invalid token")
+                    done()
+                })
+        })
 
-    //     it("Should update username with valid token", (done) => {
-    //         chai.request(app).patch("/users/test")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .send({ username: "user" })
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(200)
-    //                 expect(res.body).to.deep.equal({ username: "user",
-    //                     email: "test1@gmail.com", visibility: "private" })
-    //                 done()
-    //             })
-    //     })
+    })
 
-    //     it("Should update email with valid token", (done) => {
-    //         chai.request(app).patch("/users/user")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .send({ email: "user@gmail.com" })
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(200)
-    //                 expect(res.body).to.deep.equal({ username: "user",
-    //                     email: "user@gmail.com", visibility: "private" })
-    //                 done()
-    //             })
-    //     })
+    describe("Route PATCH /users/:username :", () => {
 
-    //     it("Should update password with valid token", (done) => {
-    //         chai.request(app).patch("/users/user")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .send({ password: "11235813" })
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(200)
-    //                 expect(res.body).to.deep.equal({ username: "user",
-    //                     email: "user@gmail.com", visibility: "private" })
-    //                 done()
-    //             })
-    //     })
+        it("Should update username with valid token", (done) => {
+            chai.request(app).patch("/users/test1")
+                .set("authorization", `Bearer ${token}`)
+                .send({ username: "user1" })
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.body).to.deep.equal({ username: "user1",
+                        email: "test1@gmail.com", visibility: "private" })
+                    done()
+                })
+        })
 
-    //     it("Should update visibility with valid token", (done) => {
-    //         chai.request(app).patch("/users/user")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .send({ visibility: "public" })
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(200)
-    //                 expect(res.body).to.deep.equal({ username: "user",
-    //                     email: "user@gmail.com", visibility: "public" })
-    //                 done()
-    //             })
-    //     })
+        it("Should update email with valid token", (done) => {
+            chai.request(app).patch("/users/user1")
+                .set("authorization", `Bearer ${token}`)
+                .send({ email: "user1@gmail.com" })
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.body).to.deep.equal({ username: "user1",
+                        email: "user1@gmail.com", visibility: "private" })
+                    done()
+                })
+        })
 
-    //     // Erreurs
+        it("Should update password with valid token", (done) => {
+            chai.request(app).patch("/users/user1")
+                .set("authorization", `Bearer ${token}`)
+                .send({ password: "11235813" })
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.body).to.deep.equal({ username: "user1",
+                        email: "user1@gmail.com", visibility: "private" })
+                    done()
+                })
+        })
 
-    // })
+        it("Should update visibility with valid token", (done) => {
+            chai.request(app).patch("/users/user1")
+                .set("authorization", `Bearer ${token}`)
+                .send({ visibility: "public" })
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(200)
+                    expect(res.body).to.deep.equal({ username: "user1",
+                        email: "user1@gmail.com", visibility: "public" })
+                    done()
+                })
+        })
 
-    // describe("Route DELETE /users/:username :", () => {
+        // Without token
 
-    //     it("Should delete user with valid token", (done) => {
-    //         chai.request(app).delete("/users/test2")
-    //             .set("authorization", `Bearer ${token}`)
-    //             .end((err, res) => {
-    //                 expect(err).to.be.null
-    //                 expect(res.status).to.equal(204)
-    //                 expect(res.body).to.be.empty
-    //                 done()
-    //             })
-    //     })
+        // Invalid token
 
-    //     // Erreurs
+        // Erreurs
 
-    // })
+    })
+
+    describe("Route DELETE /users/:username :", () => {
+
+        it("Should delete user with valid token", (done) => {
+            chai.request(app).delete("/users/user1")
+                .set("authorization", `Bearer ${token}`)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(204)
+                    expect(res.body).to.be.empty
+                    done()
+                })
+        })
+
+        it("Should not delete user without token", (done) => {
+            chai.request(app).delete("/users/user1")
+                .set("authorization", `Bearer `)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(401)
+                    expect(res.text).to.equal("Token not provided")
+                    done()
+                })
+        })
+
+        it("Should not delete user with invalid token", (done) => {
+            chai.request(app).delete("/users/user1")
+                .set("authorization", `Bearer 123`)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(401)
+                    expect(res.text).to.equal("Invalid token")
+                    done()
+                })
+        })
+
+        it("Should not delete user with invalid username", (done) => {
+            chai.request(app).delete("/users/user2")
+                .set("authorization", `Bearer ${token}`)
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(400)
+                    expect(res.text).to.equal("User does not exist")
+                    done()
+                })
+        })
+
+    })
 
     // Routes characters
 
-    it("Should refuse acces to invalid route", (done) => {
-        chai.request(app).get("/abc")
-            .end((err, res) => {
-                expect(err).to.be.null
-                expect(res.status).to.equal(404)
-                expect(res.text).to.equal("Not found")
-                done()
-            })
+    describe("Invalid routes :", () => {
+
+        it("Should refuse acces to invalid route", (done) => {
+            chai.request(app).get("/")
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(404)
+                    expect(res.text).to.equal("Not found")
+                    done()
+                })
+        })
+
+        it("Should refuse acces to invalid route", (done) => {
+            chai.request(app).get("/abc")
+                .end((err, res) => {
+                    expect(err).to.be.null
+                    expect(res.status).to.equal(404)
+                    expect(res.text).to.equal("Not found")
+                    done()
+                })
+        })
+
     })
 
     after("Suppression of the test user", (done) => {

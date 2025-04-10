@@ -19,9 +19,10 @@ export default class AuthValidator {
         }
 
         // Checking username availability
-        const usernameInDb = await this.db.query(`SELECT COUNT(*)
+        let result = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE username = '${fields.username}'`)
-        if (usernameInDb.rows[0].count == 1) {
+        const usernameInDb = result.rows[0].count
+        if (usernameInDb == 1) {
             return res.status(400).send("Username already exists")
         }
 
@@ -32,9 +33,10 @@ export default class AuthValidator {
         }
 
         // Checking email availability
-        const emailInDb = await this.db.query(`SELECT COUNT(*)
+        result = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE email = '${fields.email}'`)
-        if (emailInDb.rows[0].count == 1) {
+        const emailInDb = result.rows[0].count
+        if (emailInDb == 1) {
             return res.status(400).send("Email already used")
         }
 

@@ -26,7 +26,11 @@ export default class AuthController {
     }
 
     async login(req, res) {
-        const user = await new UserController(this.db).getUser(req.body.user_id)
+        const emailPattern = new RegExp("^[a-z0-9\.]+@[a-z\.]+\.[a-z]+$")
+        const userIdType = emailPattern.test(req.body.user_id) ? "email" : "username"
+        const result = await this.db.query(`SELECT * FROM Users
+            WHERE ${userIdType} = '${req.body.user_id}'`)
+        const user = result.rows[0]
         const token = this.#generateToken({ username: user.username })
         return res.status(200).send(token)
     }

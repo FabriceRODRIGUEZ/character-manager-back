@@ -16,8 +16,9 @@ export default class UserValidator {
 
         if (fields.username) {
             // Checking username availability
-            const usernameInDb = await this.db.query(`SELECT COUNT(*)
+            const result = await this.db.query(`SELECT COUNT(*)
                 FROM Users WHERE username = '${fields.username}'`)
+            const usernameInDb = result.rows[0].count
             if (usernameInDb == 1) {
                 return res.status(400).send("Username already exists")
             }
@@ -26,13 +27,14 @@ export default class UserValidator {
         else if (fields.email) {
             // Checking email validity
             const emailPattern = new RegExp("^[a-z0-9\.]+@[a-z\.]+\.[a-z]+$")
-            if (emailPattern.test(fields.email)) {
+            if (!emailPattern.test(fields.email)) {
                 return res.status(400).send("Incorrect email structure")
             }
 
             // Checking email availability
-            const emailInDb = await this.db.query(`SELECT COUNT(*)
+            const result = await this.db.query(`SELECT COUNT(*)
                 FROM Users WHERE email = '${fields.email}'`)
+            const emailInDb = result.rows[0].count
             if (emailInDb == 1) {
                 return res.status(400).send("Email already used")
             }
@@ -40,14 +42,14 @@ export default class UserValidator {
 
         else if (fields.password) {
             // Checking password length
-            if (user.password.length < 8) {
+            if (fields.password.length < 8) {
                 return res.status(400).send("Password not long enough")
             }
         }
 
         else if (fields.visibility) {
             // Checking visibility value
-            if (["private", "public"].includes(user.visibility)) {
+            if (!["private", "public"].includes(fields.visibility)) {
                 return res.status(400).send("Wrong visibility value")
             }
         }
@@ -61,15 +63,15 @@ export default class UserValidator {
 
     async validateDeleteUser(req, res, next) {
         // Checking user presence in db
-        this.#chekUserInDb(req, res)
+        await this.#chekUserInDb(req, res)
 
         next()
     }
 
-    async #chekUserInDb() {
-        const userInDb = await this.db.query(`SELECT COUNT(*)
+    async #chekUserInDb(req, res) {
+        const result = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE username = '${req.params.username}'`)
-
+        const userInDb = result.rows[0].count
         if (userInDb == 0) {
             return res.status(400).send("User does not exist")
         }
