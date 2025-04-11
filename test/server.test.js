@@ -269,8 +269,10 @@ describe("API tests :", function() {
                 .end((err, res) => {
                     expect(err).to.be.null
                     expect(res.status).to.equal(200)
-                    expect(res.body).to.deep.equal({ username: "user1",
-                        email: "test1@gmail.com", visibility: "private" })
+                    expect(res.body.username).to.equal("user1")
+                    expect(res.body.email).to.equal("test1@gmail.com")
+                    expect(res.body.visibility).to.equal("private")
+                    expect(res.body.token).to.exist
                     done()
                 })
         })
