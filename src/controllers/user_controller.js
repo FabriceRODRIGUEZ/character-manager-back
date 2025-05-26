@@ -44,7 +44,7 @@ export default class UserController {
             ('${user.username}', '${user.email}', '${user.password}', '${user.visibility}')`)
     }
 
-    async updateUserReq(req, res) {
+    async updateUser(req, res) {
         const user = await this.getUser(req.user)
         if (req.body.username) {
             await this.db.query(`UPDATE Users SET
@@ -75,7 +75,7 @@ export default class UserController {
         return res.status(200).json(user)
     }
 
-    async deleteUserReq(req, res) {
+    async deleteUser(req, res) {
         await this.db.query(`DELETE FROM Users
             WHERE username = '${req.user}'`)
         return res.status(204).send()

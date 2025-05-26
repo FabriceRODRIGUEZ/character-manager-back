@@ -7,6 +7,7 @@ import autoBind from "auto-bind"
 import DbConfigurator from "./configurators/db_configurator.js"
 import AuthRouter from "./routers/auth_router.js"
 import UserRouter from "./routers/user_router.js"
+import CharacterRouter from "./routers/character_router.js"
 
 
 export default class Server {
@@ -24,8 +25,11 @@ export default class Server {
 
         const authRouter = new AuthRouter(db_configurator.db).router
         const userRouter = new UserRouter(db_configurator.db).router
+        const characterRouter = new CharacterRouter(db_configurator.db).router
+
         this.app.use(authRouter)
         this.app.use(userRouter)
+        this.app.use(characterRouter)
         this.app.use("*", (_, res) => {
             return res.status(404).send("Not found")
         })

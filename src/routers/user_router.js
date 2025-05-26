@@ -22,10 +22,10 @@ export default class UserRouter {
         this.router.post("/users", authValidator.authenticate, controller.addUserReq)
         
         this.router.patch("/users/:username", authValidator.authenticate,
-            userValidator.validateUpdateUser, controller.updateUserReq)
+            userValidator.validateUpdateUser, controller.updateUser)
         
         this.router.delete("/users/:username", authValidator.authenticate,
-            userValidator.validateDeleteUser, controller.deleteUserReq)
+            userValidator.validateDeleteUser, controller.deleteUser)
     }
 
 }
