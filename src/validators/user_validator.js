@@ -1,18 +1,32 @@
 import autoBind from "auto-bind"
 
 
+/**
+ * A validator for user requests
+ */
 export default class UserValidator {
 
+    /**
+     * Constructor of the user validator
+     * @param {Pool} db
+     */
     constructor(db) {
         this.db = db
         autoBind(this)
     }
 
+    /**
+     * Validates an update user request
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     * @returns {Promise<Response>}
+     */
     async validateUpdateUser(req, res, next) {
         const fields = req.body
 
         // Checking user presence in db
-        this.#chekUserInDb(req, res)
+        await this.#chekUserInDb(req, res)
 
         if (fields.username) {
             // Checking username availability
@@ -61,13 +75,24 @@ export default class UserValidator {
         next()
     }
 
+    /**
+     * Validates a delete user request
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     */
     async validateDeleteUser(req, res, next) {
         // Checking user presence in db
         await this.#chekUserInDb(req, res)
-
         next()
     }
 
+    /**
+     * Checks user presence in db
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async #chekUserInDb(req, res) {
         const result = await this.db.query(`SELECT COUNT(*)
             FROM Users WHERE username = '${req.params.username}'`)

@@ -6,13 +6,27 @@ import User from "../models/user.js"
 import UserController from "../controllers/user_controller.js"
 
 
+/**
+ * An authentication controller
+ * @property {Pool} db
+ */
 export default class AuthController {
 
+    /**
+     * Constructor of the class
+     * @param {Pool} db
+     */
     constructor(db) {
-        this.db = db
         autoBind(this)
+        this.db = db
     }
 
+    /**
+     * Signs up a user
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async signup(req, res) {
         const user = new User(req.body.username, req.body.email,
             req.body.password, req.body.visibility)
@@ -25,6 +39,12 @@ export default class AuthController {
         })
     }
 
+    /**
+     * Logs in a user and sends a JWT token
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async login(req, res) {
         const emailPattern = new RegExp("^[a-z0-9\.]+@[a-z\.]+\.[a-z]+$")
         const userIdType = emailPattern.test(req.body.user_id) ? "email" : "username"
@@ -35,10 +55,22 @@ export default class AuthController {
         return res.status(200).send(token)
     }
 
+    /**
+     * Returns the authentified user
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async getMe(req, res) {
         return res.status(200).send(req.user)
     }
 
+    /**
+     * Generate a JWT token
+     * @private
+     * @param {Object{username}} payload
+     * @returns {string}
+     */
     #generateToken(payload) {
         return jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: "1d" })
     }

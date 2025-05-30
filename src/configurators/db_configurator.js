@@ -2,10 +2,19 @@ import dotenv from "dotenv"
 import pg from "pg"
 
 
+/**
+ * A database configurator
+ * @property {string} usersCreation
+ * @property {string} charactersCreation
+ * @property {Pool} db
+ */
 export default class DbConfigurator {
 
+    /**
+     * Constructor of the class
+     */
     constructor() {
-        this.users_creation = `CREATE TABLE Users (
+        this.usersCreation = `CREATE TABLE Users (
             username VARCHAR(20),
             email VARCHAR(50) NOT NULL UNIQUE,
             password TEXT NOT NULL,
@@ -15,7 +24,7 @@ export default class DbConfigurator {
             CONSTRAINT ck_users_visibility CHECK(visibility = 'private' OR visibility = 'public')
         )`
 
-        this.characters_creation = `CREATE TABLE Characters (
+        this.charactersCreation = `CREATE TABLE Characters (
             id SERIAL,
             owner VARCHAR(20),
             first_name VARCHAR(20) NOT NULL,
@@ -36,6 +45,9 @@ export default class DbConfigurator {
         )`
     }
 
+    /**
+     * Connects to the database
+     */
     connect() {
         dotenv.config()
         console.log("Connecting database...")
@@ -48,23 +60,26 @@ export default class DbConfigurator {
         })
     }
 
-    async seed_database() {
+    /**
+     * Seeds the database if tables don't already exist
+     */
+    async seed_database(a) {
         console.log("Seeding database...")
-        
+
         try {
-            await this.db.query(this.users_creation)
+            await this.db.query(this.usersCreation)
         } catch(error) {
-            // TABLE ALREADY EXISTS
-            if (error.code !== "42P07") {
+            // 42P07 -> TABLE ALREADY EXISTS
+            if (error.code != "42P07") {
                 console.log(error)
             }
         }
 
         try {
-            await this.db.query(this.characters_creation)
+            await this.db.query(this.charactersCreation)
         } catch(error) {
-            // TABLE ALREADY EXISTS
-            if (error.code !== "42P07") {
+            // 42P07 -> TABLE ALREADY EXISTS
+            if (error.code != "42P07") {
                 console.log(error)
             }
         }

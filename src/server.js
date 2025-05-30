@@ -10,11 +10,20 @@ import UserRouter from "./routers/user_router.js"
 import CharacterRouter from "./routers/character_router.js"
 
 
+/**
+ * A server of the application
+ * @property {Express} app
+ */
 export default class Server {
 
+    /**
+     * Constructor of the server
+     */
     constructor() {
         autoBind(this)
         dotenv.config()
+
+        /** @type {Express} */
         this.app = express()
         this.app.use(cors())
         this.app.use(bodyParser.json())
@@ -35,6 +44,9 @@ export default class Server {
         })
     }
 
+    /**
+     * Starts the server by listening requests
+     */
     start() {
         this.app.listen(process.env.PORT, () =>
             console.log(`Server started on port ${process.env.PORT}`)

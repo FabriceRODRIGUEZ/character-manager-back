@@ -3,13 +3,27 @@ import jwt from "jsonwebtoken"
 import autoBind from "auto-bind"
 
 
+/**
+ * A validator for authentication requests
+ */
 export default class AuthValidator {
 
+    /**
+     * Constructor of the authentication validator
+     * @param {Pool} db
+     */
     constructor(db) {
-        this.db = db
         autoBind(this)
+        this.db = db
     }
 
+    /**
+     * Validates a signup request
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     * @returns {Promise<Response>}
+     */
     async validateSignup(req, res, next) {
         const fields = req.body
 
@@ -53,6 +67,13 @@ export default class AuthValidator {
         next()
     }
 
+    /**
+     * Validates a login request
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     * @returns {Promise<Response>}
+     */
     async validateLogin(req, res, next) {
         const fields = req.body
 
@@ -82,6 +103,13 @@ export default class AuthValidator {
         next()
     }
 
+    /**
+     * Authenticates a request according to the JWT token
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     * @returns {Promise<Response>}
+     */
     authenticate(req, res, next) {
         const token = req.headers.authorization.split(" ")[1]
 

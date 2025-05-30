@@ -3,28 +3,52 @@ import autoBind from "auto-bind"
 import Character from "../models/character.js"
 
 
+/**
+ * A character controller
+ * @property {Pool} db
+ * @property {string} columnsList
+ */
 export default class CharacterController {
 
+    /**
+     * Constructor of the class
+     * @param {Pool} db
+     */
     constructor(db) {
         autoBind(this)
         this.db = db
+        this.columnsList = `first_name, last_name, gender, work,
+            actor, voice_actor, profile, comment, appreciation`
     }
 
+    /**
+     * Returns all the characters of a user
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async getAllCharacters(_, res) {
-        const result = await this.db.query(`SELECT * FROM Characters
+        const result = await this.db.query(`SELECT ${this.columnsList}
+            FROM Characters
             ORDER BY first_name`)
         return res.status(200).json(result.rows)
     }
 
+    /**
+     * Returns a selection of characters
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async getCharacters(req, res) {
         const filters = req.body
         const sortPorperty = req.params.sort_property
         const sortOrder = req.params.sort_order
         const offset = req.params.offset
-        const result = await this.db.query(`SELECT * FROM Characters
+        const result = await this.db.query(`SELECT ${this.columnsList}
+            FROM Characters
             WHERE first_name LIKE '%${filters.first_name}%'
             AND last_name LIKE '%${filters.last_name}%'
-            AND gender LIKE '%${filters.gender}%'
+            AND gender = '${filters.gender}'
             AND work LIKE '%${filters.work}%'
             AND actor LIKE '%${filters.actor}%'
             AND voice_actor LIKE '%${filters.voice_actor}%'
@@ -35,12 +59,25 @@ export default class CharacterController {
         return res.status(200).json(result)
     }
 
+    /**
+     * Returns a character according to its id
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async getCharacter(req, res) {
-        const result = await this.db.query(`SELECT * FROM Characters
+        const result = await this.db.query(`SELECT ${this.columnsList}
+            FROM Characters
             WHERE id = ${req.params.id}`)
         return res.status(200).json(result[0])
     }
 
+    /**
+     * Adds a character to the database
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async addCharacter(req, res) {
         const character = new Character(req.body)
         await this.db.query(`INSERT INTO Characters VALUES
@@ -52,6 +89,12 @@ export default class CharacterController {
         return res.status(201).json(character)
     }
 
+    /**
+     * Updates a character in the database
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async updateCharacter(req, res) {
         const character = new Character(req.body)
         await this.db.query(`UPDATE Characters SET
@@ -68,6 +111,12 @@ export default class CharacterController {
         return res.status(200).json(character)
     }
 
+    /**
+     * Deletes a character in the database
+     * @param {Request} req
+     * @param {Response} res
+     * @returns {Promise<Response>}
+     */
     async deleteCharacter(req, res) {
         await this.db.query(`DELETE FROM Characters
             WHERE id = ${req.params.id}`)
