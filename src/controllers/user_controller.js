@@ -63,8 +63,9 @@ export default class UserController {
     async addUserReq(req, res) {
         const user = new User(req.body.username, req.body.email,
             req.body.password, req.body.visibility)
-        await this.db.query(`INSERT INTO Users (username, email, password, visibility) VALUES
-            ('${user.username}', '${user.email}', '${user.password}', '${user.visibility}')`)
+        await this.db.query(`INSERT INTO Users VALUES
+            ('${user.username}', '${user.email}',
+            '${user.password}', '${user.visibility}')`)
         user.password = null
         return res.status(201).json(user)
     }
@@ -75,8 +76,9 @@ export default class UserController {
      * @returns {Promise<Response>}
      */
     async addUser(user) {
-        await this.db.query(`INSERT INTO Users (username, email, password, visibility) VALUES
-            ('${user.username}', '${user.email}', '${user.password}', '${user.visibility}')`)
+        await this.db.query(`INSERT INTO Users VALUES
+            ('${user.username}', '${user.email}',
+            '${user.password}', '${user.visibility}')`)
     }
 
     /**

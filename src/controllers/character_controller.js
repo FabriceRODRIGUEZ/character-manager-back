@@ -17,7 +17,7 @@ export default class CharacterController {
     constructor(db) {
         autoBind(this)
         this.db = db
-        this.columnsList = `first_name, last_name, gender, work,
+        this.columnsList = `id, first_name, last_name, gender, work,
             actor, voice_actor, profile, comment, appreciation`
     }
 
@@ -43,7 +43,6 @@ export default class CharacterController {
         const filters = req.body
         const sortPorperty = req.params.sort_property
         const sortOrder = req.params.sort_order
-        // const offset = req.params.offset
         const result = await this.db.query(`SELECT ${this.columnsList}
             FROM Characters
             WHERE first_name LIKE '%${filters.first_name}%'
@@ -82,15 +81,15 @@ export default class CharacterController {
         const character = new Character(req.body)
         await this.db.query(`INSERT INTO Characters VALUES
             (DEFAULT, '${req.user}',
-            ${(!character.first_name) ? "NULL" : `'${character.first_name}'`},
-            ${(!character.last_name) ? "NULL" : `'${character.last_name}'`},
-            ${(!character.gender) ? "NULL" : `'${character.gender}'`},
-            ${(!character.work) ? "NULL" : `'${character.work}'`},
-            ${(!character.actor) ? "NULL" : `'${character.actor}'`},
-            ${(!character.voice_actor) ? "NULL" : `'${character.voice_actor}'`},
-            ${(!character.profile) ? "NULL" : `'${character.profile}'`},
-            ${(!character.comment) ? "NULL" : `'${character.comment}'`},
-            ${(!character.appreciation) ? "NULL" : `'${character.appreciation}'`})`)
+            ${(! character.first_name) ? "NULL" : `'${character.first_name}'`},
+            ${(! character.last_name) ? "NULL" : `'${character.last_name}'`},
+            ${(! character.gender) ? "NULL" : `'${character.gender}'`},
+            ${(! character.work) ? "NULL" : `'${character.work}'`},
+            ${(! character.actor) ? "NULL" : `'${character.actor}'`},
+            ${(! character.voice_actor) ? "NULL" : `'${character.voice_actor}'`},
+            ${(! character.profile) ? "NULL" : `'${character.profile}'`},
+            ${(! character.comment) ? "NULL" : `'${character.comment}'`},
+            ${(! character.appreciation) ? "NULL" : `${character.appreciation}`})`)
         return res.status(201).json(character)
     }
 
@@ -103,15 +102,15 @@ export default class CharacterController {
     async updateCharacter(req, res) {
         const character = new Character(req.body)
         await this.db.query(`UPDATE Characters SET
-            first_name = '${character.first_name}',
-            last_name = '${character.last_name}',
-            gender = '${character.gender}',
-            work = '${character.work}',
-            actor = '${character.actor}',
-            voice_actor = '${character.voice_actor}',
-            profile = '${character.profile}',
-            comment = '${character.comment}',
-            appreciation = ${character.appreciation}
+            first_name = ${(! character.first_name) ? "NULL" : `'${character.first_name}'`},
+            last_name = ${(! character.last_name) ? "NULL" : `'${character.last_name}'`},
+            gender = ${(! character.gender) ? "NULL" : `'${character.gender}'`},
+            work = ${(! character.work) ? "NULL" : `'${character.work}'`},
+            actor = ${(! character.actor) ? "NULL" : `'${character.actor}'`},
+            voice_actor = ${(! character.voice_actor) ? "NULL" : `'${character.voice_actor}'`},
+            profile = ${(! character.profile) ? "NULL" : `'${character.profile}'`},
+            comment = ${(! character.comment) ? "NULL" : `'${character.comment}'`},
+            appreciation = ${(! character.appreciation) ? "NULL" : `${character.appreciation}`}
             WHERE id = ${req.params.id}`)
         return res.status(200).json(character)
     }
