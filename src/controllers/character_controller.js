@@ -43,7 +43,7 @@ export default class CharacterController {
         const filters = req.body
         const sortPorperty = req.params.sort_property
         const sortOrder = req.params.sort_order
-        const offset = req.params.offset
+        // const offset = req.params.offset
         const result = await this.db.query(`SELECT ${this.columnsList}
             FROM Characters
             WHERE first_name LIKE '%${filters.first_name}%'
@@ -54,8 +54,8 @@ export default class CharacterController {
             AND voice_actor LIKE '%${filters.voice_actor}%'
             AND comment LIKE '%${filters.comment}%'
             AND appreciation = ${filters.appreciation}
-            ORDER BY ${sortPorperty} ${(sortOrder == "ascendant") ? "ASC" : "DESC"}
-            LIMIT 10 OFFSET ${offset}`)
+            ORDER BY ${sortPorperty} ${(sortOrder == "ascendant") ? "ASC" : "DESC"},
+            first_name ASC`)
         return res.status(200).json(result)
     }
 
@@ -81,11 +81,16 @@ export default class CharacterController {
     async addCharacter(req, res) {
         const character = new Character(req.body)
         await this.db.query(`INSERT INTO Characters VALUES
-            (DEFAULT, '${req.user}', '${character.first_name}',
-            '${character.last_name}', '${character.gender}',
-            '${character.work}', '${character.actor}',
-            '${character.voice_actor}', '${character.profile}',
-            '${character.comment}', ${character.appreciation})`)
+            (DEFAULT, '${req.user}',
+            ${(!character.first_name) ? "NULL" : `'${character.first_name}'`},
+            ${(!character.last_name) ? "NULL" : `'${character.last_name}'`},
+            ${(!character.gender) ? "NULL" : `'${character.gender}'`},
+            ${(!character.work) ? "NULL" : `'${character.work}'`},
+            ${(!character.actor) ? "NULL" : `'${character.actor}'`},
+            ${(!character.voice_actor) ? "NULL" : `'${character.voice_actor}'`},
+            ${(!character.profile) ? "NULL" : `'${character.profile}'`},
+            ${(!character.comment) ? "NULL" : `'${character.comment}'`},
+            ${(!character.appreciation) ? "NULL" : `'${character.appreciation}'`})`)
         return res.status(201).json(character)
     }
 
