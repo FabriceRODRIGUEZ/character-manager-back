@@ -17,8 +17,6 @@ export default class CharacterController {
     constructor(db) {
         autoBind(this)
         this.db = db
-        this.columnsList = `id, first_name, last_name, gender, work,
-            actor, voice_actor, profile, comment, appreciation`
     }
 
     /**
@@ -27,8 +25,7 @@ export default class CharacterController {
      * @returns {Promise<Response>}
      */
     async getAllCharacters(_, res) {
-        const result = await this.db.query(`SELECT ${this.columnsList}
-            FROM Characters
+        const result = await this.db.query(`SELECT * FROM Characters
             ORDER BY first_name`)
         return res.status(200).json(result.rows)
     }
@@ -43,8 +40,7 @@ export default class CharacterController {
         const filters = req.body
         const sortPorperty = req.params.sort_property
         const sortOrder = req.params.sort_order
-        const result = await this.db.query(`SELECT ${this.columnsList}
-            FROM Characters
+        const result = await this.db.query(`SELECT * FROM Characters
             WHERE first_name LIKE '%${filters.first_name}%'
             AND last_name LIKE '%${filters.last_name}%'
             AND gender = '${filters.gender}'
@@ -55,7 +51,7 @@ export default class CharacterController {
             AND appreciation = ${filters.appreciation}
             ORDER BY ${sortPorperty} ${(sortOrder == "ascendant") ? "ASC" : "DESC"},
             first_name ASC`)
-        return res.status(200).json(result)
+        return res.status(200).json(result.rows)
     }
 
     /**
@@ -65,10 +61,9 @@ export default class CharacterController {
      * @returns {Promise<Response>}
      */
     async getCharacter(req, res) {
-        const result = await this.db.query(`SELECT ${this.columnsList}
-            FROM Characters
+        const result = await this.db.query(`SELECT * FROM Characters
             WHERE id = ${req.params.id}`)
-        return res.status(200).json(result[0])
+        return res.status(200).json(result.rows[0])
     }
 
     /**
