@@ -95,7 +95,7 @@ export default class UserValidator {
      */
     async #chekUserInDb(req, res) {
         const result = await this.db.query(`SELECT COUNT(*)
-            FROM Users WHERE username = '${req.params.username}'`)
+            FROM Users WHERE username = '${req.user}'`)
         const userInDb = result.rows[0].count
         if (userInDb == 0) {
             return res.status(400).send("User does not exist")

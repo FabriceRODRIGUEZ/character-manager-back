@@ -93,7 +93,7 @@ export default class UserController {
             await this.db.query(`UPDATE Users SET
                 username = '${req.body.username}'
                 WHERE username = '${req.user}'`)
-            const token = this.#generateToken({ username: user.username })
+            const token = this.#generateToken({ username: req.body.username })
             user.username = req.body.username
             user.token = token
         }
