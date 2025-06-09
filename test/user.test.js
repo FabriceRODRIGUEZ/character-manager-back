@@ -73,7 +73,7 @@ describe("Users routes :", function() {
                     expect(err).to.be.null
                     expect(res.status).to.equal(200)
                     expect(res.body).to.be.an("array")
-                    expect(res.body).to.be.not.empty
+                    expect(res.body.length).to.equal(1)
                     done()
                 })
         })
