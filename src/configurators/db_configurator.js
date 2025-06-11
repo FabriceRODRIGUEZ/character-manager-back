@@ -63,7 +63,7 @@ export default class DbConfigurator {
     /**
      * Seeds the database if tables don't already exist
      */
-    async seed_database(a) {
+    async seed_database() {
         console.log("Seeding database...")
 
         try {
