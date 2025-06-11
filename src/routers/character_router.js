@@ -24,7 +24,8 @@ export default class CharacterRouter {
         const characterValidator = new CharacterValidator(db)
         const controller = new CharacterController(db)
 
-        this.router.get("/characters", authValidator.authenticate, controller.getAllCharacters)
+        // this.router.get("/characters", authValidator.authenticate, controller.getAllCharacters)
+        this.router.get("/characters", authValidator.authenticate, controller.getCharacters)
         this.router.get("/characters/:id", authValidator.authenticate, controller.getCharacter)
         this.router.post("/characters", authValidator.authenticate,
             characterValidator.validateAddCharacter, controller.addCharacter)
