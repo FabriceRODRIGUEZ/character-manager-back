@@ -26,7 +26,7 @@ export default class CharacterController {
      */
     async getAllCharacters(_, res) {
         const result = await this.db.query(`SELECT * FROM Characters
-            ORDER BY first_name`)
+            ORDER BY first_name ASC`)
         return res.status(200).json(result.rows)
     }
 
@@ -37,20 +37,15 @@ export default class CharacterController {
      * @returns {Promise<Response>}
      */
     async getCharacters(req, res) {
-        const filters = req.body
-        const sortPorperty = req.params.sort_property
-        const sortOrder = req.params.sort_order
+        const sortPorperty = req.query.sort_property
+        const sortOrder = req.query.sort_order
         const result = await this.db.query(`SELECT * FROM Characters
-            WHERE first_name LIKE '%${filters.first_name}%'
-            AND last_name LIKE '%${filters.last_name}%'
-            AND gender = '${filters.gender}'
-            AND work LIKE '%${filters.work}%'
-            AND actor LIKE '%${filters.actor}%'
-            AND voice_actor LIKE '%${filters.voice_actor}%'
-            AND comment LIKE '%${filters.comment}%'
-            AND appreciation = ${filters.appreciation}
-            ORDER BY ${sortPorperty} ${(sortOrder == "ascendant") ? "ASC" : "DESC"},
-            first_name ASC`)
+            WHERE first_name LIKE '%${req.query.first_name}%'
+            AND gender LIKE '%${req.query.gender}%'
+            AND work LIKE '%${req.query.work}%'
+            ${(req.query.appreciation) ? `AND appreciation = ${req.query.appreciation}` : ""}
+            ORDER BY ${sortPorperty} ${(sortOrder == "ascendant") ? "ASC" : "DESC"}
+            ${(sortPorperty != "first_name") ? ", first_name ASC" : ""}`)
         return res.status(200).json(result.rows)
     }
 

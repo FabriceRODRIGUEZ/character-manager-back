@@ -38,7 +38,8 @@ export default class DbConfigurator {
             appreciation INTEGER NOT NULL DEFAULT 1,
             
             CONSTRAINT pk_characters PRIMARY KEY(id),
-            CONSTRAINT fk_characters FOREIGN KEY(owner) REFERENCES Users(username) ON DELETE CASCADE,
+            CONSTRAINT fk_characters FOREIGN KEY(owner) REFERENCES Users(username)
+                ON DELETE CASCADE ON UPDATE CASCADE,
             CONSTRAINT uq_characters UNIQUE(owner, first_name, last_name, work),
             CONSTRAINT ck_characters_gender CHECK(gender = 'M' OR gender = 'F'),
             CONSTRAINT ck_characters_appreciation CHECK(appreciation IN (1, 2, 3))

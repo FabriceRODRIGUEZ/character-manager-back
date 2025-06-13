@@ -22,7 +22,12 @@ export default class CharacterValidator {
      * @returns {Promise<Response>}
      */
     async validateAddCharacter(req, res, next) {
-        //
+        const fields = req.body
+
+        // Checking fields presence
+        if (!fields.first_name || !fields.gender || !fields.work || !fields.appreciation) {
+            return res.status(400).send("Missing field(s)")
+        }
 
         next()
     }
